@@ -139,3 +139,10 @@ test("rejects negative or non-integer creditCents", () => {
   assert.throws(() => calculateBookingQuote({ baseCents: 1000, creditCents: -1 }), RangeError);
   assert.throws(() => calculateBookingQuote({ baseCents: 1000, creditCents: 12.5 }), RangeError);
 });
+
+test("creditCents greater than baseCents floors total, deposit, and balance at 0", () => {
+  const quote = calculateBookingQuote({ baseCents: 10000, creditCents: 15000 });
+  assert.equal(quote.totalCents, 0);
+  assert.equal(quote.depositCents, 0);
+  assert.equal(quote.balanceCents, 0);
+});
