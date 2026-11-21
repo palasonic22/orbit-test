@@ -8,7 +8,7 @@ A minimal integer-cents booking quote and deposit calculator (`src/pricing.mjs`)
 
 ## Requirements
 1. All currency math uses integer cents (`RangeError` on negative or non-integer amounts).
-2. Default deposit percentage follows the current `approved` ADR ([`ADR-002`](./ADR-002-deposit-rate.md): **30%**).
+2. Default deposit percentage follows the current `approved` ADR ([`ADR-003`](./ADR-003-holiday-deposit.md): **30%** standard; a **40%** peak holiday deposit is approved but not yet implemented; the 24-hour free cancellation window remains).
 3. Peak bookings (`isPeak: true`) add a 15% surcharge on `baseCents` rounded half-up.
 4. Promo code `WELCOME10` subtracts 10% of `baseCents` rounded half-up.
 5. `totalCents` must never become negative in future credit/discount extensions.
