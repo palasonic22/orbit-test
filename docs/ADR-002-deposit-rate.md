@@ -1,8 +1,9 @@
 # ADR-002 — Raise Default Deposit Rate to 30% & 24h Free Cancellation
 
 - **Scope:** orbit-test
-- **Status:** approved
+- **Status:** superseded
 - **Supersedes:** ADR-001
+- **Superseded-by:** ADR-003
 - **Date:** 2026-11-15T00:00:00Z
 
 ## Context
