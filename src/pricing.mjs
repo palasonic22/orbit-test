@@ -25,9 +25,11 @@ export function calculateBookingQuote({
   promoCode = null,
   isPeak = false,
   bookingCount = 1,
+  creditCents = 0,
 }) {
   assertNonNegativeInteger(baseCents, "baseCents");
   assertPositiveInteger(bookingCount, "bookingCount");
+  assertNonNegativeInteger(creditCents, "creditCents");
 
   if (!Number.isInteger(depositPercent) || depositPercent < 1 || depositPercent > 100) {
     throw new RangeError("depositPercent must be an integer between 1 and 100");
@@ -48,7 +50,7 @@ export function calculateBookingQuote({
       : promoCode === "MULTI_BOOKING" && bookingCount >= MULTI_BOOKING_THRESHOLD
         ? Math.round((baseCents * MULTI_BOOKING_PERCENT) / 100)
         : 0;
-  const totalCents = baseCents + peakSurchargeCents - promoDiscountCents;
+  const totalCents = baseCents + peakSurchargeCents - promoDiscountCents - creditCents;
   const depositCents = Math.round((totalCents * depositPercent) / 100);
   const balanceCents = totalCents - depositCents;
 
@@ -56,6 +58,7 @@ export function calculateBookingQuote({
     baseCents,
     peakSurchargeCents,
     promoDiscountCents,
+    creditCents,
     totalCents,
     depositPercent,
     depositCents,
