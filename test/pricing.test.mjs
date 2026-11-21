@@ -8,6 +8,7 @@ test("applies ADR-002 default 30% deposit on standard booking", () => {
     baseCents: 10000,
     peakSurchargeCents: 0,
     promoDiscountCents: 0,
+    creditCents: 0,
     totalCents: 10000,
     depositPercent: 30,
     depositCents: 3000,
@@ -115,4 +116,33 @@ test("bookingCount does not affect non-MULTI_BOOKING promos", () => {
   const quote = calculateBookingQuote({ baseCents: 10000, promoCode: "WELCOME10", bookingCount: 5 });
   assert.equal(quote.promoDiscountCents, 1000);
   assert.equal(quote.totalCents, 9000);
+});
+
+test("creditCents defaults to 0 and leaves total unchanged", () => {
+  const quote = calculateBookingQuote({ baseCents: 10000 });
+  assert.equal(quote.creditCents, 0);
+  assert.equal(quote.totalCents, 10000);
+  assert.equal(quote.depositCents, 3000);
+  assert.equal(quote.balanceCents, 7000);
+});
+
+test("creditCents is deducted from total, deposit, and balance", () => {
+  const quote = calculateBookingQuote({ baseCents: 10000, creditCents: 1500 });
+  assert.equal(quote.creditCents, 1500);
+  assert.equal(quote.totalCents, 8500);
+  assert.equal(quote.depositPercent, 30);
+  assert.equal(quote.depositCents, 2550);
+  assert.equal(quote.balanceCents, 5950);
+});
+
+test("rejects negative or non-integer creditCents", () => {
+  assert.throws(() => calculateBookingQuote({ baseCents: 1000, creditCents: -1 }), RangeError);
+  assert.throws(() => calculateBookingQuote({ baseCents: 1000, creditCents: 12.5 }), RangeError);
+});
+
+test("creditCents greater than baseCents floors total, deposit, and balance at 0", () => {
+  const quote = calculateBookingQuote({ baseCents: 10000, creditCents: 15000 });
+  assert.equal(quote.totalCents, 0);
+  assert.equal(quote.depositCents, 0);
+  assert.equal(quote.balanceCents, 0);
 });
